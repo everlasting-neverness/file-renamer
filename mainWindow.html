@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>App</h1>
+    </header>
+    <main>
+        <section class="app-container">
+            <div class="controls">
+                <form class="controls-form">
+                    <div class="controls-container">
+                        <input type="text" placeholder="Please select files" id="actual-file" disabled="disabled" />
+                        <input type="button" value="Choose files" id="select-file" />
+                    </div>
+                    <div class="controls-container">
+                        <ul class="type-select">
+                            <li class="type-radio">
+                                <label>
+                                    <input type="radio" name="type-radio" class="js-type" value="type 1">
+                                    <span>Type 1</span>
+                                </label>
+                            </li>
+                            <li class="type-radio">
+                                <label>
+                                    <input type="radio" name="type-radio" class="js-type" value="type 2">
+                                    <span>Type 2</span>
+                                </label>
+                            </li>
+                            <li class="type-radio">
+                                <label>
+                                    <input type="radio" name="type-radio" class="js-type" value="type 3">
+                                    <span>Type 3</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="controls-container">
+                        <input type="text" class="title-input js-title-input">
+                    </div>
+                    <div class="controls-container">
+                        <button class="run-btn js-run-btn" type="button" disabled>Run</button>
+                    </div>
+                </form>
+            </div>
+            <div class="items-list-wrapper">
+                <ul class="items-list js-items-list"></ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- <div>
+        <div style="text-align:center;">
+            <input type="text" placeholder="Please select files" id="actual-file" disabled="disabled" />
+            <input type="button" value="Choose files" id="select-file" />
+        </div>
+        <br><br>
+        <textarea id="content-editor" rows="5"></textarea><br><br>
+        <input type="button" id="save-changes" value="Save changes" />
+        <input type="button" id="delete-file" value="Delete file" />
+    </div>
+    <hr>
+    <div style="text-align:center;">
+        <p>
+            The file content will be the same as the editor.
+        </p>
+        <input type="button" value="Choose a file" id="create-new-file" />
+    </div> -->
+    <script src="./app.js"></script>
+</body>
+
+</html>
