@@ -10,31 +10,34 @@
 
 <body>
     <header>
-        <h1>App</h1>
+        <h1 class="header-title">App</h1>
     </header>
     <main>
         <section class="app-container">
             <div class="controls">
+                <h3 class="controls-header">Controls</h3>
                 <form class="controls-form">
                     <div class="controls-container">
-                        <input type="text" placeholder="Please select files" id="actual-file" disabled="disabled" />
-                        <input type="button" value="Choose files" id="select-file" />
+                        <input type="text" placeholder="Please select files" disabled="disabled"
+                            class="text-input text-input--usual js-actual-files-input" 
+                        />
+                        <input type="button" value="Choose files" class="btn btn--primary js-select-file-btn" />
                     </div>
                     <div class="controls-container">
-                        <ul class="type-select">
-                            <li class="type-radio">
+                        <ul class="type-select-wrapper">
+                            <li class="type-radio-wrapper">
                                 <label>
                                     <input type="radio" name="type-radio" class="js-type" value="type 1">
                                     <span>Type 1</span>
                                 </label>
                             </li>
-                            <li class="type-radio">
+                            <li class="type-radio-wrapper">
                                 <label>
                                     <input type="radio" name="type-radio" class="js-type" value="type 2">
                                     <span>Type 2</span>
                                 </label>
                             </li>
-                            <li class="type-radio">
+                            <li class="type-radio-wrapper">
                                 <label>
                                     <input type="radio" name="type-radio" class="js-type" value="type 3">
                                     <span>Type 3</span>
@@ -43,15 +46,38 @@
                         </ul>
                     </div>
                     <div class="controls-container">
-                        <input type="text" class="title-input js-title-input">
+                        <input type="text" class="text-input text-input--usual text-input--block js-title-input">
                     </div>
+                    <p class="error-msg js-error-msg" style="display:none;">
+                        You need to specify all the requirements to run proccess
+                    </p>
                     <div class="controls-container">
-                        <button class="run-btn js-run-btn" type="button" disabled>Run</button>
+                        <button class="btn btn--primary btn--block js-run-btn" type="button" disabled>Run</button>
                     </div>
                 </form>
             </div>
             <div class="items-list-wrapper">
-                <ul class="items-list js-items-list"></ul>
+                <h3 class="items-list-header">List of items</h3>
+                <ul class="items-list js-items-list">
+                    <li class="item">
+                        <label class="item-label">
+                            <input type="checkbox">
+                            <span class="item-title" class="js-item-checkbox">item 1</span>
+                        </label>
+                    </li>
+                    <li class="item">
+                        <label class="item-label">
+                            <input type="checkbox" class="js-item-checkbox">
+                            <span class="item-title">item 1</span>
+                        </label>
+                    </li>
+                    <li class="item">
+                        <label class="item-label">
+                            <input type="checkbox" class="js-item-checkbox">
+                            <span class="item-title">item 1</span>
+                        </label>
+                    </li>
+                </ul>
             </div>
         </section>
     </main>

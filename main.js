@@ -1,6 +1,7 @@
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
+// const { App } = require('./app');
 
 const { app, BrowserWindow, Menu } = electron;
 
@@ -46,6 +47,9 @@ app.on('ready', function () {
         //Insert Menu
         Menu.setApplicationMenu(mainMenu);
     }
+
+    // new App();
+
 });
 
 // Create menu template

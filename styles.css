@@ -1,6 +1,164 @@
+:root {
+    --main-blue: #1976d2;
+    --main-blue-hover: #2196f3;
+    --main-red: #d32f2f;
+    --main-red-hover: #f44336;
+    --main-text-color: rgb(60, 65, 70);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--main-text-color);
 }
 
+body {
+    margin: 30px auto;
+    background-color: #fdfdfd;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+header {
+    text-align: center;
+}
+
+.header-title {
+    font-size: 24px;
+}
+
+main {
+    margin: 20px 50px;
+}
+
+.app-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.controls {
+    flex-shrink: 0;
+    margin-right: 25px;
+}
+
+.controls-header {
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+}
+
+.controls-form {
+    border: 1px solid #eaeaea;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.controls-container {
+    padding: 10px 0;
+}
+
+.error-msg {
+    color: var(--main-red-hover);
+}
+
+/* types select */
+
+.type-select-wrapper {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.type-radio-wrapper {
+    /* padding: 0; */
+}
+
+/* text-inputs */
+
+.text-input {
+    font-size: 18px;
+    line-height: 24px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 1px solid;
+}
+
+.text-input--usual {
+    border-color: #0a0a0a;
+    color: #0a0a0a;
+}
+
+.text-input--usual:disabled {
+    background-color: #eaeaea;
+}
+
+.text-input--block {
+    width: 100%;
+}
+
+/* buttons */
+
+.btn {
+    font-size: 18px;
+    line-height: 24px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all ease .3s;
+}
+
+.btn--primary {
+    color: #fff;
+    border-color: var(--main-blue);
+    background-color: var(--main-blue);
+}
+
+.btn--primary:hover {
+    background-color: var(--main-blue-hover);
+}
+
+.btn--primary:disabled   {
+    background-color: #eaeaea;
+    color: #6f6f6f;
+    border-color: #0a0a0a;
+}
+
+.btn--block {
+    width: 100%;
+}
+
+/* items list */
+
+.items-list-wrapper {
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+
+.items-list-header {
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+}
+
+.items-list {
+    list-style: none;
+    border: 1px solid #eaeaea;
+    padding: 12px 17px;
+    border-radius: 5px;
+}
+
+.item {
+    padding: 5px 0;
+}
+
+.item-label {
+
+}
+
+.item-title {
+    
+}
