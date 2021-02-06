@@ -16,31 +16,28 @@
         <section class="app-container">
             <div class="controls">
                 <h3 class="controls-header">Controls</h3>
-                <form class="controls-form">
+                <form class="controls-form js-controls-form">
                     <div class="controls-container">
-                        <input type="text" placeholder="Please select files" disabled="disabled"
-                            class="text-input text-input--usual js-actual-files-input" 
-                        />
-                        <input type="button" value="Choose files" class="btn btn--primary js-select-file-btn" />
+                        <input type="button" value="Choose files" class="btn btn--primary btn--block js-select-file-btn" />
                     </div>
                     <div class="controls-container">
                         <ul class="type-select-wrapper">
-                            <li class="type-radio-wrapper">
+                            <li>
                                 <label>
-                                    <input type="radio" name="type-radio" class="js-type" value="type 1">
-                                    <span>Type 1</span>
+                                    <input type="radio" name="type-radio" class="js-type" value="OST">
+                                    <span>OST</span>
                                 </label>
                             </li>
-                            <li class="type-radio-wrapper">
+                            <li>
                                 <label>
-                                    <input type="radio" name="type-radio" class="js-type" value="type 2">
-                                    <span>Type 2</span>
+                                    <input type="radio" name="type-radio" class="js-type" value="OPENING">
+                                    <span>OPENING</span>
                                 </label>
                             </li>
-                            <li class="type-radio-wrapper">
+                            <li>
                                 <label>
-                                    <input type="radio" name="type-radio" class="js-type" value="type 3">
-                                    <span>Type 3</span>
+                                    <input type="radio" name="type-radio" class="js-type" value="CLOSING">
+                                    <span>CLOSING</span>
                                 </label>
                             </li>
                         </ul>
@@ -49,56 +46,22 @@
                         <input type="text" class="text-input text-input--usual text-input--block js-title-input">
                     </div>
                     <p class="error-msg js-error-msg" style="display:none;">
-                        You need to specify all the requirements to run proccess
+                        You need to specify all the requirements
+                    </p>
+                    <p class="success-msg js-success-msg" style="display:none;">
+                        Success
                     </p>
                     <div class="controls-container">
-                        <button class="btn btn--primary btn--block js-run-btn" type="button" disabled>Run</button>
+                        <button class="btn btn--primary btn--block js-run-btn">Run</button>
                     </div>
                 </form>
             </div>
             <div class="items-list-wrapper">
                 <h3 class="items-list-header">List of items</h3>
-                <ul class="items-list js-items-list">
-                    <li class="item">
-                        <label class="item-label">
-                            <input type="checkbox">
-                            <span class="item-title" class="js-item-checkbox">item 1</span>
-                        </label>
-                    </li>
-                    <li class="item">
-                        <label class="item-label">
-                            <input type="checkbox" class="js-item-checkbox">
-                            <span class="item-title">item 1</span>
-                        </label>
-                    </li>
-                    <li class="item">
-                        <label class="item-label">
-                            <input type="checkbox" class="js-item-checkbox">
-                            <span class="item-title">item 1</span>
-                        </label>
-                    </li>
-                </ul>
+                <ul class="items-list js-items-list"></ul>
             </div>
         </section>
     </main>
-
-    <!-- <div>
-        <div style="text-align:center;">
-            <input type="text" placeholder="Please select files" id="actual-file" disabled="disabled" />
-            <input type="button" value="Choose files" id="select-file" />
-        </div>
-        <br><br>
-        <textarea id="content-editor" rows="5"></textarea><br><br>
-        <input type="button" id="save-changes" value="Save changes" />
-        <input type="button" id="delete-file" value="Delete file" />
-    </div>
-    <hr>
-    <div style="text-align:center;">
-        <p>
-            The file content will be the same as the editor.
-        </p>
-        <input type="button" value="Choose a file" id="create-new-file" />
-    </div> -->
     <script src="./app.js"></script>
 </body>
 

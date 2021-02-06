@@ -7,38 +7,36 @@ const { createListItemTemplate, getFileNameFromPath } = require('./utils');
 
 class App {
 
-    selectFileBtn = null;
-    selectTypeRadios = null;
-    titleInput = null;
-    runBtn = null;
-    itemsList = null;
-    errorMsgEl = null;
-    actualFilesInput = null;
+    selectFileBtn = document.querySelector('.js-select-file-btn');
+    selectTypeRadios = document.querySelectorAll('.js-type');
+    titleInput = document.querySelector('.js-title-input');
+    controlsForm = document.querySelector('.js-controls-form')
+    runBtn = document.querySelector('.js-run-btn');
+    itemsList = document.querySelector('.js-items-list');
+    errorMsgEl = document.querySelector('.js-error-msg');
+    actualFilesInput = document.querySelector('.js-actual-files-input');
+    successMsg = document.querySelector('.js-success-msg');
 
     domParser = new DOMParser();
     selectedItems = [];
+    selectedType = null;
+    titleInputValue = '';
 
     constructor() {
         this.init();
     }
 
     init() {
-        this.getLayoutEls();
         this.addListeners();
-    }
-
-    getLayoutEls() {
-        this.selectFileBtn = document.querySelector('.js-select-file-btn');
-        this.selectTypeRadios = document.querySelectorAll('.js-type');
-        this.titleInput = document.querySelector('.js-title-input');
-        this.runBtn = document.querySelector('.js-run-btn');
-        this.itemsList = document.querySelector('.js-items-list');
-        this.errorMsgEl = document.querySelector('.js-error-msg');
-        this.actualFilesInput = document.querySelector('.js-actual-files-input');
     }
 
     addListeners() {
         this.selectFileBtn.addEventListener('click', this.onFilesSelect.bind(this), false);
+        this.titleInput.addEventListener('keyup', this.onTitleInputChange, false);
+        this.selectTypeRadios.forEach(radio => {
+            radio.addEventListener('change', this.onTypeChange, false);
+        });
+        this.controlsForm.addEventListener('submit', this.onBeforeProccess, false);
     }
 
     getSelectedType() {
@@ -51,41 +49,42 @@ class App {
         return selectedType;
     }
 
+    onTitleInputChange = (e) => {
+        this.titleInputValue = e.target.value;
+    }
+
+    onTypeChange = (e) => {
+        this.selectedType = e.target.value;
+    }
+
     toggleErrorMsg(show = true) {
         this.errorMsgEl.style.display = show ? 'block' : 'none';
     }
 
-    onFilesSelect() {
-        const t = this;
-        dialog.showOpenDialog().then(function (dialogProps) {
-            const { filePaths, canceled } = dialogProps;
-            if (canceled) {
-                return;
-            }
-            t.clearItemsList();
-            if (filePaths === undefined) {
-                console.log('No file selected');
-            } else {
-                // t.actualFilesInput.value = fileNames[0];
-                // t.readFile(fileNames[0]);
-                t.renderItemsList(filePaths)
-            }
-        });
+    toggleSuccessMsg = (show = true) => {
+        this.successMsg.style.display = show ? 'block' : 'none';
     }
 
-    // readFile(filepath) {
-    //     fs.readFile(filepath, 'utf-8', function (err, data) {
-    //         if (err) {
-    //             alert('An error ocurred reading the file :' + err.message);
-    //             return;
-    //         }
-    
-    //         document.getElementById('content-editor').value = data;
-    //     });
-    // }
+    onFilesSelect() {
+        const t = this;
+        dialog.showOpenDialog({
+            properties: ['openFile', 'multiSelections']
+        })
+            .then(function (dialogProps) {
+                const { filePaths, canceled } = dialogProps;
+                if (canceled) {
+                    return;
+                }
+                t.clearItemsList();
+                if (filePaths === undefined) {
+                    alert('No file selected');
+                } else {
+                    t.renderItemsList(filePaths)
+                }
+            });
+    }
 
     renderItemsList(filePaths) {
-        console.log(filePaths)
         const preparedItems = this.prepareItems(filePaths);
         if (preparedItems && preparedItems.length) {
             preparedItems.forEach(item => {
@@ -96,10 +95,9 @@ class App {
 
     prepareItems(filePaths) {
         return filePaths.map(path => {
-            // TODO: read file name
             const fileName = getFileNameFromPath(path);
             const newItemEl = this.domParser.parseFromString(
-                createListItemTemplate(fileName),
+                createListItemTemplate({ fileName, path }),
                 'text/html'
             ).body.childNodes[0];
             this.addListItemListener(newItemEl);
@@ -108,18 +106,18 @@ class App {
     }
 
     addListItemListener(item) {
-        item.getElementByClassName('js-item-checkbox').addEventListener('change', this.toggleItemSelected);
+        item.querySelector('input').addEventListener('change', this.toggleItemSelected);
     }
 
     removeListItemListener(item) {
-        item.getElementByClassName('js-item-checkbox').removeEventListener('change', this.toggleItemSelected);
+        item.querySelector('input').removeEventListener('change', this.toggleItemSelected);
     }
 
     toggleItemSelected = (e) => {
-        const item = e.targer.value;
+        const item = e.target.value;
         if (item) {
-            if (this.selectedItems.includes(items)) {
-                // this.selectedItems = [ ...this.selectedItems ]
+            if (this.selectedItems.includes(item)) {
+                this.selectedItems.splice(this.selectedItems.indexOf(item), 1);
             } else {
                 this.selectedItems.push(item);
             }
@@ -139,114 +137,69 @@ class App {
         this.clearListItemsListeners();
         this.itemsList.innerHTML = '';
     }
+
+    resetTitleInputVal = () => {
+        this.titleInput.value = this.titleInputValue = '';
+    }
+
+    resetTypeRadios = () => {
+        this.selectedType = null;
+        this.selectTypeRadios.forEach(radio => {
+            radio.checked = false;
+        });
+    }
+
+    resetAppData = () => {
+        this.resetTitleInputVal();
+        this.resetTypeRadios();
+        this.clearItemsList();
+    }
+
+    onBeforeProccess = (e) => {
+        e.preventDefault();
+        if (!this.titleInputValue || !this.selectedItems.length 
+            || !this.selectedType) {
+                this.toggleErrorMsg();
+                setTimeout(function () {
+                    this.toggleErrorMsg(false);
+                }.bind(this), 2000);
+                return;
+        }
+        return this.runProccess();
+    } 
+
+    runProccess = () => {
+        this.renameSelectedItems();
+        this.toggleSuccessMsg();
+        setTimeout(function() {
+            this.toggleSuccessMsg(false);
+        }.bind(this), 3500);
+        this.resetAppData();
+    }
+
+    generatePrefix = () => `${this.selectedType} - ${this.titleInputValue} - `;
+
+    renameSelectedItems = () => {
+        const t = this;
+        const prefix = this.generatePrefix();
+        this.selectedItems.forEach((selectedItem) => {
+            t.renameItem(JSON.parse(selectedItem), prefix);
+        })
+    }
+
+    renameItem = (item, prefix) => {
+        const newPath = item.path.replace(item.fileName, `${prefix}${item.fileName}`);
+        fs.rename(item.path, newPath, function (err, data) {
+            if (err) {
+                alert('An error ocurred updating the file' + err.message);
+                console.error(err);
+                return;
+            }
+            console.log(`renamed ${item.fileName} to ${prefix}${item.fileName}`);
+        })
+    }
+
 }
 
-// document.querySelector('.js-select-file-btn').addEventListener(
-//     'click',
-//     function () {
-//         dialog.showOpenDialog(function (fileNames) {
-//             if (fileNames === undefined) {
-//                 console.log('No file selected');
-//             } else {
-//                 document.getElementById('actual-file').value = fileNames[0];
-//                 readFile(fileNames[0]);
-//             }
-//         });
-//     },
-//     false
-// );
-
-// document.getElementById('save-changes').addEventListener(
-//     'click',
-//     function () {
-//         const actualFilePath = document.getElementById('actual-file').value;
-
-//         if (actualFilePath) {
-//             saveChanges(
-//                 actualFilePath,
-//                 document.getElementById('content-editor').value
-//             );
-//         } else {
-//             alert('Please select a file first');
-//         }
-//     },
-//     false
-// );
-
-// document.getElementById('delete-file').addEventListener(
-//     'click',
-//     function () {
-//         const actualFilePath = document.getElementById('actual-file').value;
-
-//         if (actualFilePath) {
-//             deleteFile(actualFilePath);
-//             document.getElementById('actual-file').value = '';
-//             document.getElementById('content-editor').value = '';
-//         } else {
-//             alert('Please select a file first');
-//         }
-//     },
-//     false
-// );
-
-// document.getElementById('create-new-file').addEventListener(
-//     'click',
-//     function () {
-//         const content = document.getElementById('content-editor').value;
-
-//         dialog.showSaveDialog(function (fileName) {
-//             if (fileName === undefined) {
-//                 console.log("You didn't save the file");
-//                 return;
-//             }
-
-//             fs.writeFile(fileName, content, function (err) {
-//                 if (err) {
-//                     alert('An error ocurred creating the file ' + err.message);
-//                 }
-
-//                 alert('The file has been succesfully saved');
-//             });
-//         });
-//     },
-//     false
-// );
-
-
-
-
-// function deleteFile(filepath) {
-//     fs.exists(filepath, function (exists) {
-//         if (exists) {
-//             // File exists deletings
-//             fs.unlink(filepath, function (err) {
-//                 if (err) {
-//                     alert('An error ocurred updating the file' + err.message);
-//                     console.log(err);
-//                     return;
-//                 }
-//             });
-//         } else {
-//             alert("This file doesn't exist, cannot delete");
-//         }
-//     });
-// }
-
-// function saveChanges(filepath, content) {
-//     fs.writeFile(filepath, content, function (err) {
-//         if (err) {
-//             alert('An error ocurred updating the file' + err.message);
-//             console.log(err);
-//             return;
-//         }
-
-//         alert('The file has been succesfully saved');
-//     });
-// }
 
 new App();
-
-
-// module.exports = {
-//     App
-// }

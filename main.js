@@ -1,13 +1,12 @@
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
-// const { App } = require('./app');
 
 const { app, BrowserWindow, Menu } = electron;
 
 // Set ENV
-// process.env.NODE_ENV = 'production';
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'development';
 
 const isDevelopmentMode = process.env.NODE_ENV !== 'production';
 
@@ -47,8 +46,6 @@ app.on('ready', function () {
         //Insert Menu
         Menu.setApplicationMenu(mainMenu);
     }
-
-    // new App();
 
 });
 

@@ -15,10 +15,11 @@
 }
 
 body {
-    margin: 30px auto;
     background-color: #fdfdfd;
     font-size: 18px;
     line-height: 24px;
+    width: 100vw;
+    height: 100vh;
 }
 
 header {
@@ -41,6 +42,7 @@ main {
 .controls {
     flex-shrink: 0;
     margin-right: 25px;
+    flex-basis: 40%;
 }
 
 .controls-header {
@@ -63,6 +65,11 @@ main {
     color: var(--main-red-hover);
 }
 
+.success-msg {
+    color: var(--main-blue);
+    text-align: center;
+}
+
 /* types select */
 
 .type-select-wrapper {
@@ -70,10 +77,6 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-around;
-}
-
-.type-radio-wrapper {
-    /* padding: 0; */
 }
 
 /* text-inputs */
@@ -153,12 +156,4 @@ main {
 
 .item {
     padding: 5px 0;
-}
-
-.item-label {
-
-}
-
-.item-title {
-    
 }
