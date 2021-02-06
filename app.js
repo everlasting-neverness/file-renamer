@@ -1,8 +1,11 @@
 const { remote } = require('electron');
 const { dialog } = remote;
 const fs = require('fs');
-
-const { createListItemTemplate, getFileNameFromPath } = require('./utils');
+const { 
+    createListItemTemplate, 
+    getFileNameFromPath,
+    splitFileNameForExtension,
+} = require('./utils');
 
 
 class App {
@@ -10,6 +13,7 @@ class App {
     selectFileBtn = document.querySelector('.js-select-file-btn');
     selectTypeRadios = document.querySelectorAll('.js-type');
     titleInput = document.querySelector('.js-title-input');
+    postfixInput = document.querySelector('.js-postfix-input');
     controlsForm = document.querySelector('.js-controls-form')
     runBtn = document.querySelector('.js-run-btn');
     itemsList = document.querySelector('.js-items-list');
@@ -21,6 +25,7 @@ class App {
     selectedItems = [];
     selectedType = null;
     titleInputValue = '';
+    postfixInputValue = 'AnimeNewMusic';
 
     constructor() {
         this.init();
@@ -177,7 +182,7 @@ class App {
         this.resetAppData();
     }
 
-    generatePrefix = () => `${this.selectedType} - ${this.titleInputValue} - `;
+    generatePrefix = () => `[${this.titleInputValue} ${this.selectedType}]`;
 
     renameSelectedItems = () => {
         const t = this;
@@ -188,7 +193,8 @@ class App {
     }
 
     renameItem = (item, prefix) => {
-        const newPath = item.path.replace(item.fileName, `${prefix}${item.fileName}`);
+        const [fileName, fileExtension] = splitFileNameForExtension(item.fileName);
+        const newPath = item.path.replace(item.fileName, `${fileName} ${prefix}[${this.postfixInputValue}].${fileExtension}`);
         fs.rename(item.path, newPath, function (err, data) {
             if (err) {
                 alert('An error ocurred updating the file' + err.message);

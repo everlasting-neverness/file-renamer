@@ -17,7 +17,15 @@ const getFileNameFromPath = (path) => {
     return path;
 }
 
+const splitFileNameForExtension = (fileName) => {
+    const strArray = fileName.split('.');
+    const extension = strArray[strArray.length - 1];
+    strArray.splice(strArray.length - 1, 1);
+    return [strArray.join('.'), extension];
+}
+
 module.exports = {
     createListItemTemplate,
     getFileNameFromPath,
+    splitFileNameForExtension,
 }

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>App</title>
+    <title>File Renamer App</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles.css">
@@ -10,7 +10,7 @@
 
 <body>
     <header>
-        <h1 class="header-title">App</h1>
+        <h1 class="header-title">File Renamer App</h1>
     </header>
     <main>
         <section class="app-container">
@@ -24,26 +24,33 @@
                         <ul class="type-select-wrapper">
                             <li class="type-select-item">
                                 <label>
-                                    <input type="radio" name="type-radio" class="js-type" value="OST">
-                                    <span>OST</span>
+                                    <input type="radio" name="type-radio" class="js-type" value="OST1">
+                                    <span>OST1</span>
                                 </label>
                             </li>
                             <li class="type-select-item">
                                 <label>
-                                    <input type="radio" name="type-radio" class="js-type" value="OPENING">
-                                    <span>OPENING</span>
+                                    <input type="radio" name="type-radio" class="js-type" value="OP">
+                                    <span>Opening</span>
                                 </label>
                             </li>
                             <li class="type-select-item">
                                 <label>
-                                    <input type="radio" name="type-radio" class="js-type" value="CLOSING">
-                                    <span>CLOSING</span>
+                                    <input type="radio" name="type-radio" class="js-type" value="ED">
+                                    <span>Ending</span>
                                 </label>
                             </li>
                         </ul>
                     </div>
                     <div class="controls-container">
-                        <input type="text" class="text-input text-input--usual text-input--block js-title-input">
+                        <input type="text" placeholder="Enter title"
+                            class="text-input text-input--usual text-input--block js-title-input"
+                        >
+                    </div>
+                    <div class="controls-container">
+                        <input type="text" placeholder="Enter postfix" value="AnimeNewMusic" disabled
+                            class="text-input text-input--usual text-input--block js-postfix-input"
+                        >
                     </div>
                     <p class="error-msg js-error-msg" style="display:none;">
                         You need to specify all the requirements
