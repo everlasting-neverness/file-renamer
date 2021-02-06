@@ -79,6 +79,14 @@ main {
     justify-content: space-around;
 }
 
+.type-select-item {
+    white-space: nowrap;
+}
+
+.type-select-item + .type-select-item {
+    margin-left: 15px;
+}
+
 /* text-inputs */
 
 .text-input {
