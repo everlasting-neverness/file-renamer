@@ -1,6 +1,6 @@
 {
   "name": "electron-app",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "filesystem app",
   "main": "main.js",
   "scripts": {
@@ -12,8 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "browser-id3-writer": "^4.4.0",
-    "jsmediatags": "^3.9.3"
+    "node-id3": "^0.2.2"
   },
   "devDependencies": {
     "electron-packager": "^13.1.1",

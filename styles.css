@@ -65,11 +65,6 @@ main {
     color: var(--main-red-hover);
 }
 
-.success-msg {
-    color: var(--main-blue);
-    text-align: center;
-}
-
 /* types select */
 
 .type-select-wrapper {

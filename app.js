@@ -1,8 +1,6 @@
 const { remote } = require('electron');
 const { dialog } = remote;
-const jsmediatags = require('jsmediatags');
-const ID3Writer = require('browser-id3-writer');
-const fs = require('fs');
+const NodeID3 = require('node-id3')
 const {
     createListItemTemplate,
     getFileNameFromPath,
@@ -26,14 +24,12 @@ class App {
     itemsList = document.querySelector('.js-items-list');
     errorMsgEl = document.querySelector('.js-error-msg');
     actualFilesInput = document.querySelector('.js-actual-files-input');
-    successMsg = document.querySelector('.js-success-msg');
 
     domParser = new DOMParser();
     selectedItems = [];
     selectedType = null;
     titleInputValue = '';
     postfixInputValue = 'AnimeNewMusic';
-    doneItemsCounter = 0;
 
     constructor() {
         this.init();
@@ -85,10 +81,6 @@ class App {
     toggleErrorMsg(show = true) {
         this.errorMsgEl.style.display = show ? 'block' : 'none';
     }
-
-    toggleSuccessMsg = (show = true) => {
-        this.successMsg.style.display = show ? 'block' : 'none';
-    };
 
     onFilesSelect() {
         const t = this;
@@ -192,7 +184,6 @@ class App {
     };
 
     resetAppData = () => {
-        this.doneItemsCounter = 0;
         this.resetTitleInputVal();
         this.resetTypeRadios();
         this.clearItemsList();
@@ -217,19 +208,14 @@ class App {
         return this.runProcess();
     };
 
-    runProcess = async () => {
-        await this.renameSelectedItems();
+    runProcess = () => {
+        this.renameSelectedItems();
+        this.finishProcess();
     };
 
-    finishProcess = () => {
-        this.toggleSuccessMsg();
-        setTimeout(
-            function () {
-                this.toggleSuccessMsg(false);
-            }.bind(this),
-            3500
-        );
-        this.resetAppData();
+    finishProcess = (alertText = "success") => {
+        alert(alertText);
+        window.location.reload();
     }
 
     generatePrefix = (item, isFirst) => {
@@ -248,10 +234,10 @@ class App {
         return `[${this.titleInputValue} ${typeStr}]`;
     };
 
-    renameSelectedItems = async () => {
+    renameSelectedItems = () => {
         const t = this;
-        await this.selectedItems.forEach(async (selectedItem, index) => {
-            await t.renameItem(
+        this.selectedItems.forEach((selectedItem, index) => {
+            t.renameItem(
                 JSON.parse(selectedItem), 
                 index === 0,
                 index === t.selectedItems.length - 1
@@ -259,48 +245,38 @@ class App {
         });
     };
 
-    readTitleFromMeta = async (opts) => {
-        const { item, successCallback } = opts;
-        return await new jsmediatags.Reader(item.path)
-            .setTagsToRead(['TIT2', 'TT2'])
-            .read({
-                onSuccess: (tag) => {
-                    return successCallback(tag.tags, opts);
-                },
-                onError: function(err) {
-                    console.error(err);
-                }
-            });
+    readTitleFromMeta = (path) => {
+        const options = {
+            include: ['TIT2'],
+        };
+        const tags = NodeID3.read(path, options);
+        return tags.title;
     }
 
-    processFile = (tags, opts) => {
-        const { item, isFirst, isLast } = opts;
+    processFile = (opts) => {
+        const { item, isFirst, title } = opts;
         const prefix = this.generatePrefix(item, isFirst);
         try {
-            const initialFileBuffer = fs.readFileSync(item.path);
-            const writer = new ID3Writer(initialFileBuffer);
-            writer.setFrame(
-                'TIT2',
-                `${tags.title} ${prefix}[${this.postfixInputValue}]`
-            );
-            writer.addTag();
-            const taggedSongBuffer = Buffer.from(writer.arrayBuffer);
-            fs.writeFileSync(item.path, taggedSongBuffer);
-            this.doneItemsCounter++;
-            if (isLast) {
-                alert('Success');
-                this.finishProcess();
-                window.location.reload();
-            }
+            const options = {
+                include: ['TIT2', "TPE1", "TP1", "TALB", "TAL", "PIC"],
+            };
+
+            NodeID3.update(
+                {
+                    title: `${title} ${prefix}[${this.postfixInputValue}]`,
+                }, 
+                item.path,
+                options
+            ); 
         } catch (e) {
             console.error(e);
+            this.finishProcess("error");
         }
     }
 
-    renameItem = async (item, isFirst, isLast) => {
-        await this.readTitleFromMeta({
-            item, isFirst, isLast, successCallback: this.processFile,
-        });
+    renameItem = (item, isFirst) => {
+        const title = this.readTitleFromMeta(item.path);
+        this.processFile({ item, isFirst, title });
     };
 }
 
