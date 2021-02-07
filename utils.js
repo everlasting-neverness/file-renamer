@@ -1,6 +1,6 @@
 const createListItemTemplate = (item) => `<li class="item">
     <label>
-        <input type="checkbox" class="js-item-checkbox" value='${JSON.stringify(item)}'>
+        <input type="checkbox" class="js-item-checkbox" value='${JSON.stringify(item)}' checked>
         <span>${item.fileName}</span>
     </label>
 </li>`;

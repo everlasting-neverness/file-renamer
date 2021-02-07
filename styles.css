@@ -160,8 +160,15 @@ main {
     border: 1px solid #eaeaea;
     padding: 12px 17px;
     border-radius: 5px;
+    counter-reset: section;
 }
 
-.item {
+.items-list .item {
+    counter-increment: step-counter;
     padding: 5px 0;
+}
+
+.items-list .item::before {
+    content: counter(step-counter);
+    margin-right: 3px;
 }

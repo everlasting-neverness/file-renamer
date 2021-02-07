@@ -9,6 +9,7 @@ const {
 } = require('./utils');
 
 class App {
+
     selectFileBtn = document.querySelector('.js-select-file-btn');
     selectTypeRadios = document.querySelectorAll('.js-type');
     titleInput = document.querySelector('.js-title-input');
@@ -120,10 +121,12 @@ class App {
     prepareItems(filePaths) {
         return filePaths.map((path) => {
             const fileName = getFileNameFromPath(path);
+            const itemData = { fileName, path };
             const newItemEl = this.domParser.parseFromString(
-                createListItemTemplate({ fileName, path }),
+                createListItemTemplate(itemData),
                 'text/html'
             ).body.childNodes[0];
+            this.selectedItems.push(JSON.stringify(itemData));
             this.addListItemListener(newItemEl);
             return newItemEl;
         });
