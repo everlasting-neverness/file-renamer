@@ -8,6 +8,13 @@ const {
     getFileNameFromPath,
 } = require('./utils');
 
+
+const PREFIX_TYPES = {
+    OP: "OP",
+    ED: "ED",
+    OST: "OST",
+}
+
 class App {
 
     selectFileBtn = document.querySelector('.js-select-file-btn');
@@ -225,15 +232,28 @@ class App {
         this.resetAppData();
     }
 
-    generatePrefix = () => `[${this.titleInputValue} ${this.selectedType}]`;
+    generatePrefix = (item, isFirst) => {
+        let typeStr = this.selectedType;
+        switch(this.selectedType) {
+            case PREFIX_TYPES.OP:
+            case PREFIX_TYPES.ED:
+                typeStr = isFirst ? this.selectedType : PREFIX_TYPES.OST;
+                break;
+            case PREFIX_TYPES.OST:
+                typeStr = `${this.selectedType}${this.selectedItems.indexOf(JSON.stringify(item)) + 1}`;
+                break;
+            default:
+                break;
+        }
+        return `[${this.titleInputValue} ${typeStr}]`;
+    };
 
     renameSelectedItems = async () => {
         const t = this;
-        const prefix = this.generatePrefix();
         await this.selectedItems.forEach(async (selectedItem, index) => {
             await t.renameItem(
                 JSON.parse(selectedItem), 
-                prefix,
+                index === 0,
                 index === t.selectedItems.length - 1
             );
         });
@@ -254,7 +274,8 @@ class App {
     }
 
     processFile = (tags, opts) => {
-        const { item, prefix, isLast } = opts;
+        const { item, isFirst, isLast } = opts;
+        const prefix = this.generatePrefix(item, isFirst);
         try {
             const initialFileBuffer = fs.readFileSync(item.path);
             const writer = new ID3Writer(initialFileBuffer);
@@ -276,9 +297,9 @@ class App {
         }
     }
 
-    renameItem = async (item, prefix, isLast) => {
+    renameItem = async (item, isFirst, isLast) => {
         await this.readTitleFromMeta({
-            item, prefix, isLast, successCallback: this.processFile,
+            item, isFirst, isLast, successCallback: this.processFile,
         });
     };
 }
