@@ -11,6 +11,7 @@ const PREFIX_TYPES = {
     OP: "OP",
     ED: "ED",
     OST: "OST",
+    MUSIC: "MUSIC",
 }
 
 class App {
@@ -218,7 +219,7 @@ class App {
         window.location.reload();
     }
 
-    generatePrefix = (item, isFirst) => {
+    generatePrefix = ({ item, isFirst }) => {
         let typeStr = this.selectedType;
         switch(this.selectedType) {
             case PREFIX_TYPES.OP:
@@ -228,11 +229,29 @@ class App {
             case PREFIX_TYPES.OST:
                 typeStr = `${this.selectedType}${this.selectedItems.indexOf(JSON.stringify(item)) + 1}`;
                 break;
+            case PREFIX_TYPES.MUSIC:
+                const orderNumber = this.selectedItems.indexOf(JSON.stringify(item)) + 1;
+                typeStr = `_${orderNumber <= 9 ? "0" : ''}${orderNumber}`;
+                return `[${this.titleInputValue}${typeStr}]`;
             default:
                 break;
         }
         return `[${this.titleInputValue} ${typeStr}]`;
     };
+
+    generateTitle = (opts) => {
+        const { title } = opts;
+        const prefix = this.generatePrefix(opts);
+        switch(this.selectedType) {
+            case PREFIX_TYPES.MUSIC:
+                return `${title}${prefix}[${this.postfixInputValue}]`;
+            case PREFIX_TYPES.OP:
+            case PREFIX_TYPES.ED:
+            case PREFIX_TYPES.OST:
+            default:
+            return `${title} ${prefix}[${this.postfixInputValue}]`;
+        }
+    }
 
     renameSelectedItems = () => {
         const t = this;
@@ -254,20 +273,17 @@ class App {
     }
 
     processFile = (opts) => {
-        const { item, isFirst, title } = opts;
-        const prefix = this.generatePrefix(item, isFirst);
+        const title = this.generateTitle(opts);
         try {
             const options = {
                 include: ['TIT2', "TPE1", "TP1", "TALB", "TAL", "PIC"],
             };
 
             NodeID3.update(
-                {
-                    title: `${title} ${prefix}[${this.postfixInputValue}]`,
-                }, 
-                item.path,
+                { title }, 
+                opts.item.path,
                 options
-            ); 
+            );
         } catch (e) {
             console.error(e);
             this.finishProcess("error");
