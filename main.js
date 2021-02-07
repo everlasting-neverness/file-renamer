@@ -5,8 +5,8 @@ const path = require('path');
 const { app, BrowserWindow, Menu } = electron;
 
 // Set ENV
-// process.env.NODE_ENV = 'production';
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'development';
 
 const isDevelopmentMode = process.env.NODE_ENV !== 'production';
 
