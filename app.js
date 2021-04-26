@@ -25,6 +25,7 @@ class App {
     itemsList = document.querySelector('.js-items-list');
     errorMsgEl = document.querySelector('.js-error-msg');
     actualFilesInput = document.querySelector('.js-actual-files-input');
+    indexInput = document.querySelector('.js-index-input');
 
     domParser = new DOMParser();
     selectedItems = [];
@@ -77,6 +78,11 @@ class App {
 
     onTypeChange = (e) => {
         this.selectedType = e.target.value;
+        if (this.selectedType === PREFIX_TYPES.OST) {
+            this.indexInput.disabled = false;
+        } else {
+            this.indexInput.disabled = true;
+        }
     };
 
     toggleErrorMsg(show = true) {
@@ -219,7 +225,7 @@ class App {
         window.location.reload();
     }
 
-    generatePrefix = ({ item, isFirst }) => {
+    generatePrefix = ({ item, isFirst, index }) => {
         let typeStr = this.selectedType;
         switch(this.selectedType) {
             case PREFIX_TYPES.OP:
@@ -227,10 +233,12 @@ class App {
                 typeStr = isFirst ? this.selectedType : PREFIX_TYPES.OST;
                 break;
             case PREFIX_TYPES.OST:
-                typeStr = `${this.selectedType}${this.selectedItems.indexOf(JSON.stringify(item)) + 1}`;
+                // typeStr = `${this.selectedType}${this.selectedItems.indexOf(JSON.stringify(item)) + 1}`;
+                typeStr = `${this.selectedType}${index}`;
                 break;
             case PREFIX_TYPES.MUSIC:
-                const orderNumber = this.selectedItems.indexOf(JSON.stringify(item)) + 1;
+                // const orderNumber = this.selectedItems.indexOf(JSON.stringify(item)) + 1;
+                const orderNumber = `${this.selectedType}${index}`;
                 typeStr = `_${orderNumber <= 9 ? "0" : ''}${orderNumber}`;
                 return `[${this.titleInputValue}${typeStr}]`;
             default:
@@ -244,22 +252,22 @@ class App {
         const prefix = this.generatePrefix(opts);
         switch(this.selectedType) {
             case PREFIX_TYPES.MUSIC:
-                return `${title}${prefix}[${this.postfixInputValue}]`;
             case PREFIX_TYPES.OP:
             case PREFIX_TYPES.ED:
             case PREFIX_TYPES.OST:
             default:
-            return `${title} ${prefix}[${this.postfixInputValue}]`;
+                return `${title} ${prefix}[${this.postfixInputValue}]`;
         }
     }
 
     renameSelectedItems = () => {
         const t = this;
+        const startIndex = Number(this.indexInput.value) || 1;
         this.selectedItems.forEach((selectedItem, index) => {
             t.renameItem(
                 JSON.parse(selectedItem), 
                 index === 0,
-                index === t.selectedItems.length - 1
+                startIndex + index,
             );
         });
     };
@@ -290,9 +298,14 @@ class App {
         }
     }
 
-    renameItem = (item, isFirst) => {
+    renameItem = (item, isFirst, index) => {
         const title = this.readTitleFromMeta(item.path);
-        this.processFile({ item, isFirst, title });
+        this.processFile({ 
+            item, 
+            isFirst, 
+            title, 
+            index,
+        });
     };
 }
 
