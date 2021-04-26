@@ -238,8 +238,7 @@ class App {
                 break;
             case PREFIX_TYPES.MUSIC:
                 // const orderNumber = this.selectedItems.indexOf(JSON.stringify(item)) + 1;
-                const orderNumber = `${this.selectedType}${index}`;
-                typeStr = `_${orderNumber <= 9 ? "0" : ''}${orderNumber}`;
+                typeStr = `_${index <= 9 ? "0" : ''}${index}`;
                 return `[${this.titleInputValue}${typeStr}]`;
             default:
                 break;
